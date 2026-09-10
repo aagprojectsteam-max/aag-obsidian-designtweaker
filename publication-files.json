@@ -1,0 +1,22 @@
+[
+  ".gitattributes",
+  ".github/workflows/ci.yml",
+  ".github/workflows/release.yml",
+  ".gitignore",
+  "LICENSE",
+  "README.md",
+  "docs/release-notes.md",
+  "docs/releases.md",
+  "docs/validation.md",
+  "main.js",
+  "manifest.json",
+  "package-lock.json",
+  "package.json",
+  "publication-files.json",
+  "publication.json",
+  "scripts/publication.cjs",
+  "styles.css",
+  "tests/publication.test.js",
+  "tests/settings.test.js",
+  "versions.json"
+]

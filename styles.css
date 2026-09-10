@@ -1,0 +1,594 @@
+body {
+  --obsidian-redesign-explorer-font-size: 30px;
+  --obsidian-redesign-explorer-line-height: 1.5;
+  --obsidian-redesign-explorer-item-spacing: 4px;
+  --obsidian-redesign-explorer-border-radius: 4px;
+  --obsidian-redesign-explorer-padding-y: 2px;
+  --obsidian-redesign-explorer-padding-x: 4px;
+  --obsidian-redesign-explorer-text-color: var(--text-normal);
+  --obsidian-redesign-explorer-folder-bg: rgba(0, 123, 255, 0.1);
+  --obsidian-redesign-explorer-folder-hover-bg: rgba(0, 123, 255, 0.25);
+  --obsidian-redesign-explorer-folder-active-bg: rgba(0, 123, 255, 0.3);
+  --obsidian-redesign-explorer-file-bg: rgba(40, 167, 69, 0.1);
+  --obsidian-redesign-explorer-file-hover-bg: rgba(40, 167, 69, 0.2);
+  --obsidian-redesign-explorer-border-color: var(--background-modifier-border);
+  --obsidian-redesign-explorer-hover-border-color: var(--interactive-accent);
+  --obsidian-redesign-explorer-collapse-icon-color: #b19cd9;
+  --obsidian-redesign-explorer-collapse-icon-hover-color: #967bb6;
+  --obsidian-redesign-explorer-collapse-icon-size: 22px;
+  --obsidian-redesign-explorer-collapse-icon-button-size: 28px;
+  --obsidian-redesign-explorer-collapse-icon-stroke: 4;
+  --obsidian-redesign-explorer-badge-bg: #b19cd9;
+  --obsidian-redesign-explorer-badge-text: #ffffff;
+  --obsidian-redesign-explorer-badge-font-size: 11px;
+  --obsidian-redesign-explorer-badge-radius: 12px;
+  --obsidian-redesign-explorer-guide-color: #b19cd9;
+  --obsidian-redesign-explorer-guide-hover-color: #967bb6;
+  --obsidian-redesign-explorer-guide-width: 4px;
+  --obsidian-redesign-explorer-guide-margin-left: 8px;
+  --obsidian-redesign-explorer-guide-padding-left: 14px;
+  --obsidian-redesign-explorer-selection-bg: #ffe0b2;
+  --obsidian-redesign-explorer-selection-border: #ffb74d;
+  --obsidian-redesign-explorer-selection-text: #5d4037;
+  --obsidian-redesign-active-file-light-bg: #fff176;
+  --obsidian-redesign-active-file-light-border: #fbc02d;
+  --obsidian-redesign-active-file-light-text: #000000;
+  --obsidian-redesign-active-file-dark-bg: #f6e58d;
+  --obsidian-redesign-active-file-dark-border: #d8c55c;
+  --obsidian-redesign-active-file-dark-text: #000000;
+  --obsidian-redesign-active-file-font-weight: 700;
+  --obsidian-redesign-active-file-border-width: 1px;
+  --obsidian-redesign-tab-title-font-size: 18px;
+  --obsidian-redesign-tab-pane-title-font-size: 18px;
+  --obsidian-redesign-tab-pane-title-color: #ffffff;
+  --obsidian-redesign-tab-min-width: unset;
+  --obsidian-redesign-tab-title-max-width: none;
+  --obsidian-redesign-tab-height: 40px;
+  --obsidian-redesign-tab-title-align: center;
+  --obsidian-redesign-tab-border-width: 3px;
+  --obsidian-redesign-tab-light-bg: #fff176;
+  --obsidian-redesign-tab-light-border: #fbc02d;
+  --obsidian-redesign-tab-light-text: #000000;
+  --obsidian-redesign-tab-light-font-weight: 800;
+  --obsidian-redesign-tab-dark-bg: rgba(251, 192, 45, 0.2);
+  --obsidian-redesign-tab-dark-border: #fbc02d;
+  --obsidian-redesign-tab-dark-text: #fff59d;
+  --obsidian-redesign-tab-dark-font-weight: 700;
+  --obsidian-redesign-tab-close-opacity: 0.8;
+  --obsidian-redesign-dataview-direction: rtl;
+  --obsidian-redesign-dataview-text-align: right;
+  --obsidian-redesign-dataview-width: auto;
+  --obsidian-redesign-dataview-table-layout: auto;
+  --obsidian-redesign-dataview-white-space: nowrap;
+  --obsidian-redesign-note-font-size: 50px;
+  --obsidian-redesign-note-heading-scale: 3;
+  --obsidian-redesign-status-bar-hidden-opacity: 0;
+  --obsidian-redesign-status-bar-dim-opacity: 0.35;
+  --obsidian-redesign-status-bar-hover-opacity: 1;
+  --obsidian-redesign-status-bar-transition: 250ms;
+  --obsidian-redesign-center-scrollbar-width: 18px;
+  --obsidian-redesign-center-scrollbar-radius: 10px;
+  --obsidian-redesign-center-scrollbar-thumb: #b19cd9;
+  --obsidian-redesign-center-scrollbar-thumb-hover: #967bb6;
+  --obsidian-redesign-center-scrollbar-track: rgba(0, 0, 0, 0);
+}
+
+body.obsidian-redesign-explorer .nav-file,
+body.obsidian-redesign-explorer .nav-folder {
+  margin-bottom: var(--obsidian-redesign-explorer-item-spacing);
+}
+
+body.obsidian-redesign-explorer .nav-file-title,
+body.obsidian-redesign-explorer .nav-folder-title {
+  border-radius: var(--obsidian-redesign-explorer-border-radius);
+  color: var(--obsidian-redesign-explorer-text-color);
+  font-size: var(--obsidian-redesign-explorer-font-size);
+  line-height: var(--obsidian-redesign-explorer-line-height);
+  margin-bottom: 2px;
+  padding: var(--obsidian-redesign-explorer-padding-y)
+    var(--obsidian-redesign-explorer-padding-x);
+}
+
+body.obsidian-redesign-explorer .nav-file-title-content,
+body.obsidian-redesign-explorer .nav-folder-title-content {
+  color: var(--obsidian-redesign-explorer-text-color);
+  margin-left: 2px !important;
+}
+
+body.obsidian-redesign-explorer-folders .nav-folder-title {
+  background-color: var(--obsidian-redesign-explorer-folder-bg) !important;
+  transition: background-color 0.05s ease-in-out !important;
+}
+
+body.obsidian-redesign-explorer-folders .nav-folder-title:hover,
+body.obsidian-redesign-explorer-folders div.nav-folder-title:hover {
+  background-color: var(--obsidian-redesign-explorer-folder-hover-bg) !important;
+  color: var(--obsidian-redesign-explorer-text-color) !important;
+  filter: none !important;
+}
+
+body.obsidian-redesign-explorer-folders .nav-folder-title.is-being-dragged,
+body.obsidian-redesign-explorer-folders .nav-folder-title:active {
+  background-color: var(--obsidian-redesign-explorer-folder-active-bg) !important;
+}
+
+body.obsidian-redesign-explorer-folder-bold .nav-folder-title-content {
+  font-weight: 700 !important;
+}
+
+body.obsidian-redesign-explorer-files .nav-file-title {
+  background-color: var(--obsidian-redesign-explorer-file-bg) !important;
+}
+
+body.obsidian-redesign-explorer-files .nav-file-title:hover {
+  background-color: var(--obsidian-redesign-explorer-file-hover-bg) !important;
+}
+
+body.obsidian-redesign-explorer-borders .nav-file-title,
+body.obsidian-redesign-explorer-borders .nav-folder-title {
+  border: 1px solid var(--obsidian-redesign-explorer-border-color);
+}
+
+body.obsidian-redesign-explorer-borders .nav-file-title:hover,
+body.obsidian-redesign-explorer-borders .nav-folder-title:hover {
+  border-color: var(--obsidian-redesign-explorer-hover-border-color);
+}
+
+body.obsidian-redesign-explorer-collapse-icons .nav-folder-collapse-indicator,
+body.obsidian-redesign-explorer-collapse-icons .nav-file-collapse-indicator,
+body.obsidian-redesign-explorer-collapse-icons .collapse-icon {
+  align-items: center !important;
+  display: flex !important;
+  height: var(--obsidian-redesign-explorer-collapse-icon-button-size) !important;
+  justify-content: center !important;
+  margin-right: 4px !important;
+  width: var(--obsidian-redesign-explorer-collapse-icon-button-size) !important;
+}
+
+body.obsidian-redesign-explorer-collapse-icons .nav-folder-collapse-indicator svg,
+body.obsidian-redesign-explorer-collapse-icons .nav-file-collapse-indicator svg,
+body.obsidian-redesign-explorer-collapse-icons .collapse-icon svg {
+  color: var(--obsidian-redesign-explorer-collapse-icon-color) !important;
+  fill: var(--obsidian-redesign-explorer-collapse-icon-color) !important;
+  height: var(--obsidian-redesign-explorer-collapse-icon-size) !important;
+  opacity: 1 !important;
+  stroke-width: var(--obsidian-redesign-explorer-collapse-icon-stroke) !important;
+  width: var(--obsidian-redesign-explorer-collapse-icon-size) !important;
+}
+
+body.obsidian-redesign-explorer-collapse-icons
+  .nav-folder-title:hover
+  .nav-folder-collapse-indicator
+  svg {
+  color: var(--obsidian-redesign-explorer-collapse-icon-hover-color) !important;
+  filter: drop-shadow(0 0 2px var(--obsidian-redesign-explorer-collapse-icon-color));
+}
+
+body.obsidian-redesign-explorer-badges .nav-folder-title .nav-folder-tag,
+body.obsidian-redesign-explorer-badges .nav-folder-title-content + .nav-folder-tag,
+body.obsidian-redesign-explorer-badges
+  .nav-folder-title
+  > div:last-child:not(.nav-folder-title-content) {
+  align-items: center !important;
+  background-color: var(--obsidian-redesign-explorer-badge-bg) !important;
+  border-radius: var(--obsidian-redesign-explorer-badge-radius) !important;
+  color: var(--obsidian-redesign-explorer-badge-text) !important;
+  display: inline-flex !important;
+  font-size: var(--obsidian-redesign-explorer-badge-font-size) !important;
+  font-weight: 600 !important;
+  height: 18px !important;
+  justify-content: center !important;
+  margin-left: 10px !important;
+  margin-right: auto !important;
+  min-width: 24px !important;
+  padding: 2px 8px !important;
+}
+
+body.obsidian-redesign-explorer-guides {
+  --nav-indentation-guide-width: var(--obsidian-redesign-explorer-guide-width) !important;
+  --nav-indentation-guide-color: var(--obsidian-redesign-explorer-guide-color) !important;
+}
+
+body.obsidian-redesign-explorer-guides .nav-folder-content {
+  border-left: var(--obsidian-redesign-explorer-guide-width) solid
+    var(--obsidian-redesign-explorer-guide-color) !important;
+  margin-left: var(--obsidian-redesign-explorer-guide-margin-left) !important;
+  padding-left: var(--obsidian-redesign-explorer-guide-padding-left) !important;
+}
+
+body.obsidian-redesign-explorer-guides .nav-folder-content:hover {
+  --nav-indentation-guide-color: var(--obsidian-redesign-explorer-guide-hover-color) !important;
+  border-left-color: var(--obsidian-redesign-explorer-guide-hover-color) !important;
+}
+
+body.obsidian-redesign-explorer-selection .nav-file-title.is-selected,
+body.obsidian-redesign-explorer-selection .nav-folder-title.is-selected {
+  background-color: var(--obsidian-redesign-explorer-selection-bg) !important;
+  border: 1px solid var(--obsidian-redesign-explorer-selection-border) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
+  color: var(--obsidian-redesign-explorer-selection-text) !important;
+}
+
+body.obsidian-redesign-explorer-selection
+  .nav-file-title.is-selected
+  .nav-file-title-content,
+body.obsidian-redesign-explorer-selection
+  .nav-folder-title.is-selected
+  .nav-folder-title-content {
+  color: var(--obsidian-redesign-explorer-selection-text) !important;
+}
+
+body.obsidian-redesign-explorer-selection-bold
+  .nav-file-title.is-selected
+  .nav-file-title-content,
+body.obsidian-redesign-explorer-selection-bold
+  .nav-folder-title.is-selected
+  .nav-folder-title-content {
+  font-weight: 700 !important;
+}
+
+body.obsidian-redesign-explorer-selection
+  .nav-folder-title.is-selected
+  .nav-folder-collapse-indicator
+  svg,
+body.obsidian-redesign-explorer-selection .nav-folder-title.is-selected .nav-folder-tag {
+  color: var(--obsidian-redesign-explorer-selection-text) !important;
+  fill: var(--obsidian-redesign-explorer-selection-text) !important;
+}
+
+body.obsidian-redesign-active-file .nav-file-title.is-active,
+body.obsidian-redesign-active-file .nav-file.is-active > .nav-file-title {
+  background-color: var(--obsidian-redesign-active-file-light-bg) !important;
+  border: var(--obsidian-redesign-active-file-border-width) solid
+    var(--obsidian-redesign-active-file-light-border) !important;
+  color: var(--obsidian-redesign-active-file-light-text) !important;
+}
+
+body.obsidian-redesign-active-file .nav-file-title.is-active .nav-file-title-content,
+body.obsidian-redesign-active-file
+  .nav-file.is-active
+  > .nav-file-title
+  .nav-file-title-content {
+  color: var(--obsidian-redesign-active-file-light-text) !important;
+  font-weight: var(--obsidian-redesign-active-file-font-weight) !important;
+}
+
+body.obsidian-redesign-active-file.theme-dark .nav-file-title.is-active,
+body.obsidian-redesign-active-file.theme-dark .nav-file.is-active > .nav-file-title {
+  background-color: var(--obsidian-redesign-active-file-dark-bg) !important;
+  border-color: var(--obsidian-redesign-active-file-dark-border) !important;
+  color: var(--obsidian-redesign-active-file-dark-text) !important;
+}
+
+body.obsidian-redesign-active-file.theme-dark
+  .nav-file-title.is-active
+  .nav-file-title-content,
+body.obsidian-redesign-active-file.theme-dark
+  .nav-file.is-active
+  > .nav-file-title
+  .nav-file-title-content {
+  color: var(--obsidian-redesign-active-file-dark-text) !important;
+}
+
+body.obsidian-redesign-tabs .workspace-tab-header-inner-title {
+  flex-grow: 1;
+  font-size: var(--obsidian-redesign-tab-title-font-size) !important;
+  text-align: var(--obsidian-redesign-tab-title-align);
+}
+
+body.obsidian-redesign-tabs .workspace-tab-header {
+  height: var(--obsidian-redesign-tab-height) !important;
+}
+
+body.obsidian-redesign-tabs-width-scope-root
+  .workspace-split.mod-root
+  .workspace-tab-header {
+  min-width: var(--obsidian-redesign-tab-min-width) !important;
+}
+
+body.obsidian-redesign-tabs-width-scope-root
+  .workspace-split.mod-root
+  .workspace-tab-header-inner-title {
+  max-width: var(--obsidian-redesign-tab-title-max-width) !important;
+}
+
+body.obsidian-redesign-tabs-width-scope-root
+  .workspace-split.mod-root
+  .workspace-tab-header-inner {
+  min-width: 0;
+  width: 100%;
+}
+
+body.obsidian-redesign-tabs-width-scope-all .workspace-tab-header {
+  min-width: var(--obsidian-redesign-tab-min-width) !important;
+}
+
+body.obsidian-redesign-tabs-width-scope-all .workspace-tab-header-inner-title {
+  max-width: var(--obsidian-redesign-tab-title-max-width) !important;
+}
+
+body.obsidian-redesign-tabs-width-scope-all .workspace-tab-header-inner {
+  min-width: 0;
+  width: 100%;
+}
+
+body.obsidian-redesign-tabs.theme-light .workspace-tab-header.is-active {
+  background-color: var(--obsidian-redesign-tab-light-bg) !important;
+  border-bottom: var(--obsidian-redesign-tab-border-width) solid
+    var(--obsidian-redesign-tab-light-border) !important;
+}
+
+body.obsidian-redesign-tabs.theme-light
+  .workspace-tab-header.is-active
+  .workspace-tab-header-inner-title {
+  color: var(--obsidian-redesign-tab-light-text) !important;
+  font-weight: var(--obsidian-redesign-tab-light-font-weight) !important;
+}
+
+body.obsidian-redesign-tabs.theme-light
+  .workspace-tab-header.is-active
+  .workspace-tab-header-inner-close-button {
+  color: var(--obsidian-redesign-tab-light-text) !important;
+  opacity: var(--obsidian-redesign-tab-close-opacity);
+}
+
+body.obsidian-redesign-tabs.theme-dark .workspace-tab-header.is-active {
+  background-color: var(--obsidian-redesign-tab-dark-bg) !important;
+  border-bottom: var(--obsidian-redesign-tab-border-width) solid
+    var(--obsidian-redesign-tab-dark-border) !important;
+  box-shadow: none !important;
+}
+
+body.obsidian-redesign-tabs.theme-dark
+  .workspace-tab-header.is-active
+  .workspace-tab-header-inner-title {
+  color: var(--obsidian-redesign-tab-dark-text) !important;
+  font-weight: var(--obsidian-redesign-tab-dark-font-weight) !important;
+}
+
+body.obsidian-redesign-tabs.theme-dark
+  .workspace-tab-header.is-active
+  .workspace-tab-header-inner-close-button {
+  color: var(--obsidian-redesign-tab-dark-text) !important;
+  opacity: var(--obsidian-redesign-tab-close-opacity);
+}
+
+body.obsidian-redesign-tabs-mode-underline .workspace-tab-header.is-active {
+  background-color: transparent !important;
+}
+
+body.obsidian-redesign-tabs-mode-background .workspace-tab-header.is-active {
+  border-bottom-color: transparent !important;
+}
+
+body.obsidian-redesign-tab-pane-title
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-title-container,
+body.obsidian-redesign-tab-pane-title
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-title,
+body.obsidian-redesign-tab-pane-title
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-breadcrumb,
+body.obsidian-redesign-tab-pane-title
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-breadcrumb-title,
+body.obsidian-redesign-tab-pane-title
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-breadcrumb-parent,
+body.obsidian-redesign-tab-pane-title
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-breadcrumb-separator {
+  font-size: var(--obsidian-redesign-tab-pane-title-font-size) !important;
+  line-height: 1.3 !important;
+}
+
+body.obsidian-redesign-tab-pane-title
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-title-container {
+  min-height: calc(var(--obsidian-redesign-tab-pane-title-font-size) * 1.3);
+}
+
+body.obsidian-redesign-tab-pane-title-color
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-title-container,
+body.obsidian-redesign-tab-pane-title-color
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-title,
+body.obsidian-redesign-tab-pane-title-color
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-breadcrumb,
+body.obsidian-redesign-tab-pane-title-color
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-breadcrumb-title,
+body.obsidian-redesign-tab-pane-title-color
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-breadcrumb-parent,
+body.obsidian-redesign-tab-pane-title-color
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .view-header-breadcrumb-separator {
+  color: var(--obsidian-redesign-tab-pane-title-color) !important;
+}
+
+body.obsidian-redesign-dataview .dataview.table-view-table {
+  direction: var(--obsidian-redesign-dataview-direction);
+  table-layout: var(--obsidian-redesign-dataview-table-layout);
+  width: var(--obsidian-redesign-dataview-width);
+}
+
+body.obsidian-redesign-dataview .dataview.table-view-table th,
+body.obsidian-redesign-dataview .dataview.table-view-table td {
+  text-align: var(--obsidian-redesign-dataview-text-align);
+  white-space: var(--obsidian-redesign-dataview-white-space);
+}
+
+body.obsidian-redesign-note-scope-root.obsidian-redesign-note-editor
+  .workspace-split.mod-root
+  .markdown-source-view.mod-cm6
+  .cm-content,
+body.obsidian-redesign-note-scope-all.obsidian-redesign-note-editor
+  .markdown-source-view.mod-cm6
+  .cm-content {
+  font-size: var(--obsidian-redesign-note-font-size) !important;
+}
+
+body.obsidian-redesign-note-scope-root.obsidian-redesign-note-reading
+  .workspace-split.mod-root
+  .markdown-rendered,
+body.obsidian-redesign-note-scope-all.obsidian-redesign-note-reading .markdown-rendered {
+  font-size: var(--obsidian-redesign-note-font-size) !important;
+}
+
+body.obsidian-redesign-note-scope-root.obsidian-redesign-note-headings
+  .workspace-split.mod-root
+  .markdown-rendered
+  h1,
+body.obsidian-redesign-note-scope-all.obsidian-redesign-note-headings .markdown-rendered h1 {
+  font-size: calc(
+    var(--obsidian-redesign-note-font-size) * var(--obsidian-redesign-note-heading-scale)
+  ) !important;
+}
+
+body.obsidian-redesign-note-scope-root.obsidian-redesign-note-title
+  .workspace-split.mod-root
+  .inline-title,
+body.obsidian-redesign-note-scope-all.obsidian-redesign-note-title .inline-title {
+  font-size: calc(
+    var(--obsidian-redesign-note-font-size) * var(--obsidian-redesign-note-heading-scale)
+  ) !important;
+}
+
+body.obsidian-redesign-status-bar .status-bar {
+  transition: opacity var(--obsidian-redesign-status-bar-transition) ease-in-out;
+}
+
+body.obsidian-redesign-status-bar-mode-hover .status-bar {
+  opacity: var(--obsidian-redesign-status-bar-hidden-opacity);
+}
+
+body.obsidian-redesign-status-bar-mode-dim .status-bar {
+  opacity: var(--obsidian-redesign-status-bar-dim-opacity);
+}
+
+body.obsidian-redesign-status-bar-mode-hover .status-bar:hover,
+body.obsidian-redesign-status-bar-mode-dim .status-bar:hover {
+  opacity: var(--obsidian-redesign-status-bar-hover-opacity);
+}
+
+body.obsidian-redesign-status-bar-mode-hidden .status-bar {
+  display: none !important;
+}
+
+body.obsidian-redesign-center-scrollbar
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .markdown-source-view.mod-cm6
+  .cm-scroller,
+body.obsidian-redesign-center-scrollbar
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .markdown-reading-view
+  .markdown-preview-view {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+body.obsidian-redesign-center-scrollbar-always-visible
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .markdown-source-view.mod-cm6
+  .cm-scroller,
+body.obsidian-redesign-center-scrollbar-always-visible
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .markdown-reading-view
+  .markdown-preview-view {
+  overflow-y: scroll !important;
+}
+
+body.obsidian-redesign-center-scrollbar
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .markdown-source-view.mod-cm6
+  .cm-scroller::-webkit-scrollbar,
+body.obsidian-redesign-center-scrollbar
+  .workspace-split.mod-root
+  .workspace-leaf-content[data-type="markdown"]
+  .markdown-reading-view
+  .markdown-preview-view::-webkit-scrollbar {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+.obsidian-redesign-scrollbar-host {
+  position: relative !important;
+}
+
+.obsidian-redesign-custom-scrollbar {
+  background: var(--obsidian-redesign-center-scrollbar-track);
+  border-radius: var(--obsidian-redesign-center-scrollbar-radius);
+  box-sizing: border-box;
+  cursor: default;
+  opacity: 0.95;
+  pointer-events: auto;
+  position: absolute;
+  right: 3px;
+  transition: opacity 0.15s ease;
+  user-select: none;
+  z-index: 20;
+}
+
+.obsidian-redesign-custom-scrollbar-thumb {
+  background: var(--obsidian-redesign-center-scrollbar-thumb);
+  border-radius: var(--obsidian-redesign-center-scrollbar-radius);
+  box-sizing: border-box;
+  min-height: 36px;
+  width: 100%;
+}
+
+.obsidian-redesign-custom-scrollbar:hover .obsidian-redesign-custom-scrollbar-thumb,
+.obsidian-redesign-scrollbar-dragging .obsidian-redesign-custom-scrollbar-thumb {
+  background: var(--obsidian-redesign-center-scrollbar-thumb-hover);
+}
+
+.obsidian-redesign-settings .obsidian-redesign-settings-section {
+  border-top: 1px solid var(--background-modifier-border);
+  padding: 12px 0;
+}
+
+.obsidian-redesign-settings .obsidian-redesign-settings-section summary {
+  cursor: pointer;
+  font-size: 1.05em;
+  font-weight: 700;
+}
+
+.obsidian-redesign-settings .obsidian-redesign-settings-section-description {
+  color: var(--text-muted);
+  margin: 8px 0 4px;
+}
+
+.obsidian-redesign-settings .obsidian-redesign-settings-section-content {
+  padding-top: 4px;
+}
+
+.obsidian-redesign-settings .obsidian-redesign-settings-subheading {
+  color: var(--text-muted);
+  font-size: 0.9em;
+  letter-spacing: 0;
+  margin: 18px 0 4px;
+  text-transform: uppercase;
+}

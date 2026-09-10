@@ -1,0 +1,22 @@
+{
+  "name": "aag-design-tweaker",
+  "private": true,
+  "description": "Appearance settings for Obsidian.",
+  "main": "main.js",
+  "version": "1.1.11",
+  "license": "MIT",
+  "author": "AAG",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "node scripts/publication.cjs check",
+    "build": "node scripts/publication.cjs stage",
+    "test": "node --test tests/*.test.js",
+    "scan": "node scripts/publication.cjs scan",
+    "release:stage": "node scripts/publication.cjs stage",
+    "release:check": "node scripts/publication.cjs assets",
+    "release:tag": "node scripts/publication.cjs tag",
+    "verify": "npm run check && npm run build && npm test && npm run release:stage && npm run release:check && npm run scan"
+  }
+}

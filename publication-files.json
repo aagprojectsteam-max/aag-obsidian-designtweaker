@@ -5,6 +5,7 @@
   ".gitignore",
   "LICENSE",
   "README.md",
+  "docs/HANDOFF.md",
   "docs/release-notes.md",
   "docs/releases.md",
   "docs/validation.md",

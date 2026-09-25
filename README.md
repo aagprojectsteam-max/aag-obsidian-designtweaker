@@ -18,7 +18,7 @@ Adjust Obsidian's appearance from one settings panel, including the file explore
 
 ## Usage and commands
 
-Open **Settings → AAG - Design Tweaker** and expand the group you want to adjust. Changes are saved through Obsidian's plugin settings. Use the General switch to disable the redesign; use Reset everything to restore defaults. This plugin registers **no command-palette commands**.
+Open **Settings → AAG - Design Tweaker** and expand the group you want to adjust. Changes are saved through Obsidian's plugin settings. Use the General switch to disable the redesign; use Reset everything to restore defaults. The plugin also registers **Open Design Tweaker settings** in the Command Palette.
 
 The plugin ships its stylesheet and applies settings through CSS variables, classes and related UI behavior. No separate snippet folder or bundling step is needed. Dataview styling affects tables when Dataview is installed; it does not install Dataview or provide its queries.
 
@@ -80,3 +80,7 @@ Confirm the plugin files are in the directory matching the manifest ID and that 
 AAG-owned code is licensed under [MIT](LICENSE). Obsidian is a separately supplied host application, not distributed by this repository.
 
 Root `main.js` is readable authored source. There are no npm runtime/build dependencies or bundler. The build validates and copies the three runtime files deterministically. Tests exercise settings defaults, normalization, legacy migration and packaging failure cases. Project CSS is AAG-owned; no third-party implementation, font or icon bundle is distributed by this plugin.
+
+## 1.1.12 hardening candidate
+
+Adds keyboard-accessible custom scrollbar controls, complete pointer-drag cleanup, file-explorer CSS scoping, focus-visible status-bar behavior, debounced high-frequency settings persistence, and a Command Palette shortcut to open the settings tab.

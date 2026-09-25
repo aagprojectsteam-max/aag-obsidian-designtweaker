@@ -18,7 +18,7 @@ Adjust Obsidian's appearance from one settings panel, including the file explore
 
 ## Usage and commands
 
-Open **Settings → AAG - Design Tweaker** and expand the group you want to adjust. Changes are saved through Obsidian's plugin settings. Use the General switch to disable the redesign; use Reset everything to restore defaults. This plugin registers **no command-palette commands**.
+Open **Settings → AAG - Design Tweaker** and expand the group you want to adjust. Changes are saved through Obsidian's plugin settings. Use the General switch to disable the redesign; use Reset everything to restore defaults. The command palette includes **Open Design Tweaker settings**, which opens this plugin’s settings tab.
 
 The plugin ships its stylesheet and applies settings through CSS variables, classes and related UI behavior. No separate snippet folder or bundling step is needed. Dataview styling affects tables when Dataview is installed; it does not install Dataview or provide its queries.
 
@@ -80,3 +80,11 @@ Confirm the plugin files are in the directory matching the manifest ID and that 
 AAG-owned code is licensed under [MIT](LICENSE). Obsidian is a separately supplied host application, not distributed by this repository.
 
 Root `main.js` is readable authored source. There are no npm runtime/build dependencies or bundler. The build validates and copies the three runtime files deterministically. Tests exercise settings defaults, normalization, legacy migration and packaging failure cases. Project CSS is AAG-owned; no third-party implementation, font or icon bundle is distributed by this plugin.
+
+## Privacy and network use
+
+This plugin does not use telemetry, analytics, accounts, or remote network services. It only changes interface styling and stores its settings through the Obsidian plugin data API.
+
+## 1.1.12 hardening
+
+Version 1.1.12 scopes explorer CSS more narrowly, improves keyboard/focus accessibility for the custom scrollbar and status bar, hardens drag cleanup, and reduces high-frequency settings writes and fallback polling.

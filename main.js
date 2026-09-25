@@ -359,18 +359,36 @@ const CSS_VARIABLE_NAMES = [
 module.exports = class ObsidianRedesignPlugin extends Plugin {
   async onload() {
     this.customScrollbars = new Map();
+    this.activeCustomScrollbarDrag = null;
+    this.settingsSaveTimer = null;
     await this.loadSettings();
     this.applySettings();
     this.addSettingTab(new RedesignSettingTab(this.app, this));
+    this.addCommand({
+      id: "open-design-tweaker-settings",
+      name: "Open Design Tweaker settings",
+      callback: () => {
+        this.app.setting.open();
+        this.app.setting.openTabById(this.manifest.id);
+      }
+    });
+
     this.registerEvent(this.app.workspace.on("layout-change", () => this.scheduleCustomScrollbarRefresh()));
     this.registerEvent(this.app.workspace.on("active-leaf-change", () => this.scheduleCustomScrollbarRefresh()));
     this.registerEvent(this.app.workspace.on("file-open", () => this.scheduleCustomScrollbarRefresh()));
     this.registerDomEvent(window, "resize", () => this.scheduleCustomScrollbarRefresh());
-    this.registerInterval(window.setInterval(() => this.refreshCustomScrollbars(), 750));
+    // Workspace/layout events are primary; this slow fallback catches rare content-height changes.
+    this.registerInterval(window.setInterval(() => this.refreshCustomScrollbars(), 5000));
     this.scheduleCustomScrollbarRefresh();
   }
 
   onunload() {
+    this.cancelCustomScrollbarDrag();
+    if (this.settingsSaveTimer !== null) {
+      window.clearTimeout(this.settingsSaveTimer);
+      this.settingsSaveTimer = null;
+      void this.persistSettingsOnly();
+    }
     this.clearBodyState();
   }
 
@@ -399,10 +417,30 @@ module.exports = class ObsidianRedesignPlugin extends Plugin {
     this.normalizeSettings();
   }
 
-  async saveSettings() {
+  async persistSettingsOnly() {
     this.normalizeSettings();
     await this.saveData(this.settings);
+  }
+
+  async saveSettings() {
+    if (this.settingsSaveTimer !== null) {
+      window.clearTimeout(this.settingsSaveTimer);
+      this.settingsSaveTimer = null;
+    }
+    await this.persistSettingsOnly();
     this.applySettings();
+  }
+
+  previewAndScheduleSettingsSave(delayMs = 250) {
+    this.normalizeSettings();
+    this.applySettings();
+    if (this.settingsSaveTimer !== null) {
+      window.clearTimeout(this.settingsSaveTimer);
+    }
+    this.settingsSaveTimer = window.setTimeout(() => {
+      this.settingsSaveTimer = null;
+      void this.persistSettingsOnly();
+    }, delayMs);
   }
 
   normalizeSettings() {
@@ -759,6 +797,11 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
 
     const bar = document.createElement("div");
     bar.className = "obsidian-redesign-custom-scrollbar";
+    bar.setAttribute("role", "scrollbar");
+    bar.setAttribute("aria-label", "Markdown content scrollbar");
+    bar.setAttribute("aria-orientation", "vertical");
+    bar.setAttribute("aria-valuemin", "0");
+    bar.tabIndex = 0;
     const thumb = document.createElement("div");
     thumb.className = "obsidian-redesign-custom-scrollbar-thumb";
     bar.appendChild(thumb);
@@ -767,6 +810,7 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
     const data = {
       bar,
       host,
+      onKeyDown: null,
       onPointerDown: null,
       onScroll: null,
       thumb
@@ -774,9 +818,23 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
 
     data.onScroll = () => this.updateCustomScrollbar(scrollElement);
     data.onPointerDown = (event) => this.startCustomScrollbarDrag(event, scrollElement);
+    data.onKeyDown = (event) => {
+      const maxScrollTop = Math.max(0, scrollElement.scrollHeight - scrollElement.clientHeight);
+      const target = getScrollbarKeyTarget(
+        event.key,
+        scrollElement.scrollTop,
+        maxScrollTop,
+        scrollElement.clientHeight
+      );
+      if (target === null) return;
+      event.preventDefault();
+      scrollElement.scrollTop = target;
+      this.updateCustomScrollbar(scrollElement);
+    };
 
     scrollElement.addEventListener("scroll", data.onScroll, { passive: true });
     bar.addEventListener("pointerdown", data.onPointerDown);
+    bar.addEventListener("keydown", data.onKeyDown);
 
     this.customScrollbars.set(scrollElement, data);
   }
@@ -793,6 +851,8 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
 
     if (maxScrollTop <= 1) {
       bar.style.display = "none";
+      bar.setAttribute("aria-hidden", "true");
+      bar.tabIndex = -1;
       return;
     }
 
@@ -803,6 +863,8 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
 
     if (height <= 0) {
       bar.style.display = "none";
+      bar.setAttribute("aria-hidden", "true");
+      bar.tabIndex = -1;
       return;
     }
 
@@ -812,6 +874,10 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
     const thumbTop = Math.round((scrollElement.scrollTop / maxScrollTop) * maxThumbTop);
 
     bar.style.display = "";
+    bar.removeAttribute("aria-hidden");
+    bar.tabIndex = 0;
+    bar.setAttribute("aria-valuemax", String(Math.max(0, Math.round(maxScrollTop))));
+    bar.setAttribute("aria-valuenow", String(Math.max(0, Math.round(scrollElement.scrollTop))));
     bar.style.top = `${top}px`;
     bar.style.height = `${height}px`;
     bar.style.width = `${width}px`;
@@ -819,48 +885,68 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
     thumb.style.transform = `translateY(${thumbTop}px)`;
   }
 
+  cancelCustomScrollbarDrag() {
+    const drag = this.activeCustomScrollbarDrag;
+    if (!drag) return;
+    this.activeCustomScrollbarDrag = null;
+    drag.finish();
+  }
+
   startCustomScrollbarDrag(event, scrollElement) {
     const data = this.customScrollbars.get(scrollElement);
-
-    if (!data) {
-      return;
-    }
+    if (!data || event.isPrimary === false) return;
 
     event.preventDefault();
+    this.cancelCustomScrollbarDrag();
 
     const { bar, thumb } = data;
+    const pointerId = event.pointerId;
     const barRect = bar.getBoundingClientRect();
     const thumbRect = thumb.getBoundingClientRect();
     const maxScrollTop = scrollElement.scrollHeight - scrollElement.clientHeight;
     const maxThumbTop = Math.max(1, barRect.height - thumbRect.height);
-
-    if (maxScrollTop <= 1) {
-      return;
-    }
+    if (maxScrollTop <= 1) return;
 
     const pointerOffset = event.target === thumb ? event.clientY - thumbRect.top : thumbRect.height / 2;
-
     const moveTo = (clientY) => {
       const thumbTop = Math.min(maxThumbTop, Math.max(0, clientY - barRect.top - pointerOffset));
       scrollElement.scrollTop = (thumbTop / maxThumbTop) * maxScrollTop;
       this.updateCustomScrollbar(scrollElement);
     };
-
     const onPointerMove = (moveEvent) => {
+      if (moveEvent.pointerId !== pointerId) return;
       moveEvent.preventDefault();
       moveTo(moveEvent.clientY);
     };
 
-    const onPointerUp = () => {
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
       document.removeEventListener("pointermove", onPointerMove);
-      document.removeEventListener("pointerup", onPointerUp);
+      document.removeEventListener("pointerup", onPointerEnd);
+      document.removeEventListener("pointercancel", onPointerEnd);
+      window.removeEventListener("blur", finish);
+      bar.removeEventListener("lostpointercapture", finish);
+      try {
+        if (bar.hasPointerCapture?.(pointerId)) bar.releasePointerCapture(pointerId);
+      } catch {}
       document.body.classList.remove("obsidian-redesign-scrollbar-dragging");
+      if (this.activeCustomScrollbarDrag?.finish === finish) this.activeCustomScrollbarDrag = null;
+    };
+    const onPointerEnd = (endEvent) => {
+      if (endEvent.pointerId === pointerId) finish();
     };
 
+    this.activeCustomScrollbarDrag = { finish, pointerId, scrollElement };
     document.body.classList.add("obsidian-redesign-scrollbar-dragging");
+    try { bar.setPointerCapture?.(pointerId); } catch {}
     moveTo(event.clientY);
     document.addEventListener("pointermove", onPointerMove);
-    document.addEventListener("pointerup", onPointerUp);
+    document.addEventListener("pointerup", onPointerEnd);
+    document.addEventListener("pointercancel", onPointerEnd);
+    window.addEventListener("blur", finish, { once: true });
+    bar.addEventListener("lostpointercapture", finish, { once: true });
   }
 
   removeCustomScrollbars() {
@@ -885,8 +971,12 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
       return;
     }
 
+    if (this.activeCustomScrollbarDrag?.scrollElement === scrollElement) {
+      this.cancelCustomScrollbarDrag();
+    }
     scrollElement.removeEventListener("scroll", data.onScroll);
     data.bar.removeEventListener("pointerdown", data.onPointerDown);
+    data.bar.removeEventListener("keydown", data.onKeyDown);
     data.bar.remove();
 
     if (!data.host.querySelector(".obsidian-redesign-custom-scrollbar")) {
@@ -952,7 +1042,7 @@ class RedesignSettingTab extends PluginSettingTab {
     containerEl.empty();
     containerEl.addClass("obsidian-redesign-settings");
 
-    containerEl.createEl("h2", { text: "AAG - Design Tweaker" });
+    containerEl.createEl("h2", { text: "AAG - Obsidian Design Tweaker" });
     containerEl.createEl("p", {
       text: "A control panel for tweaking the Obsidian design, split into focused sections."
     });
@@ -1267,9 +1357,9 @@ class RedesignSettingTab extends PluginSettingTab {
           .setLimits(min, max, step)
           .setValue(this.plugin.settings[settingKey])
           .setDynamicTooltip()
-          .onChange(async (value) => {
+          .onChange((value) => {
             this.plugin.settings[settingKey] = value;
-            await this.plugin.saveSettings();
+            this.plugin.previewAndScheduleSettingsSave();
           })
       );
   }
@@ -1296,9 +1386,9 @@ class RedesignSettingTab extends PluginSettingTab {
       .setName(name)
       .setDesc(desc)
       .addColorPicker((color) =>
-        color.setValue(this.plugin.settings[settingKey]).onChange(async (value) => {
+        color.setValue(this.plugin.settings[settingKey]).onChange((value) => {
           this.plugin.settings[settingKey] = value;
-          await this.plugin.saveSettings();
+          this.plugin.previewAndScheduleSettingsSave();
         })
       );
   }
@@ -1308,12 +1398,29 @@ class RedesignSettingTab extends PluginSettingTab {
       .setName(name)
       .setDesc(desc)
       .addText((text) =>
-        text.setValue(this.plugin.settings[settingKey]).onChange(async (value) => {
+        text.setValue(this.plugin.settings[settingKey]).onChange((value) => {
           this.plugin.settings[settingKey] = value;
-          await this.plugin.saveSettings();
+          this.plugin.previewAndScheduleSettingsSave();
         })
       );
   }
+}
+
+function getScrollbarKeyTarget(key, current, max, pageSize) {
+  const safeMax = Math.max(0, Number(max) || 0);
+  const safeCurrent = Math.max(0, Math.min(safeMax, Number(current) || 0));
+  const page = Math.max(40, (Number(pageSize) || 0) * 0.9);
+  let next;
+  switch (key) {
+    case "ArrowUp": next = safeCurrent - 40; break;
+    case "ArrowDown": next = safeCurrent + 40; break;
+    case "PageUp": next = safeCurrent - page; break;
+    case "PageDown": next = safeCurrent + page; break;
+    case "Home": next = 0; break;
+    case "End": next = safeMax; break;
+    default: return null;
+  }
+  return Math.max(0, Math.min(safeMax, next));
 }
 
 function fontWeightOptions() {

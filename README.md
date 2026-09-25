@@ -80,3 +80,7 @@ Confirm the plugin files are in the directory matching the manifest ID and that 
 AAG-owned code is licensed under [MIT](LICENSE). Obsidian is a separately supplied host application, not distributed by this repository.
 
 Root `main.js` is readable authored source. There are no npm runtime/build dependencies or bundler. The build validates and copies the three runtime files deterministically. Tests exercise settings defaults, normalization, legacy migration and packaging failure cases. Project CSS is AAG-owned; no third-party implementation, font or icon bundle is distributed by this plugin.
+
+## Privacy and network behavior
+
+Design Tweaker does not use telemetry, analytics, accounts, advertising, or remote network services. It changes interface styling and stores its settings through the Obsidian plugin data API.

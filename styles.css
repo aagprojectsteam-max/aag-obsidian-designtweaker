@@ -548,6 +548,12 @@ body.obsidian-redesign-center-scrollbar
   width: 0 !important;
 }
 
+body.obsidian-redesign-hide-sidebar-icon
+  .sidebar-tabs
+  .obsidian-redesign-hidden-sidebar-icon {
+  display: none !important;
+}
+
 .obsidian-redesign-scrollbar-host {
   position: relative !important;
 }

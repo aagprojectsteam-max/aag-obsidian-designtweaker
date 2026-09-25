@@ -366,16 +366,25 @@ module.exports = class ObsidianRedesignPlugin extends Plugin {
     this.addSettingTab(new RedesignSettingTab(this.app, this));
     this.addCommand({
       id: "open-design-tweaker-settings",
-      name: "Open Design Tweaker settings",
+      name: "Open design tweaker settings",
       callback: () => {
         this.app.setting.open();
         this.app.setting.openTabById(this.manifest.id);
       }
     });
 
-    this.registerEvent(this.app.workspace.on("layout-change", () => this.scheduleCustomScrollbarRefresh()));
-    this.registerEvent(this.app.workspace.on("active-leaf-change", () => this.scheduleCustomScrollbarRefresh()));
-    this.registerEvent(this.app.workspace.on("file-open", () => this.scheduleCustomScrollbarRefresh()));
+    this.registerEvent(this.app.workspace.on("layout-change", () => {
+      this.updateDynamicStyles(this.settings.masterEnabled);
+      this.scheduleCustomScrollbarRefresh();
+    }));
+    this.registerEvent(this.app.workspace.on("active-leaf-change", () => {
+      this.updateDynamicStyles(this.settings.masterEnabled);
+      this.scheduleCustomScrollbarRefresh();
+    }));
+    this.registerEvent(this.app.workspace.on("file-open", () => {
+      this.updateDynamicStyles(this.settings.masterEnabled);
+      this.scheduleCustomScrollbarRefresh();
+    }));
     this.registerDomEvent(window, "resize", () => this.scheduleCustomScrollbarRefresh());
     // Workspace/layout events are primary; this slow fallback catches rare content-height changes.
     this.registerInterval(window.setInterval(() => this.refreshCustomScrollbars(), 5000));
@@ -717,24 +726,22 @@ module.exports = class ObsidianRedesignPlugin extends Plugin {
   }
 
   updateDynamicStyles(enabled) {
+    this.removeDynamicStyle();
+
     if (!enabled || !this.settings.hideSidebarIcon || !this.settings.hiddenSidebarIconLabel) {
-      this.removeDynamicStyle();
       return;
     }
 
-    if (!this.dynamicStyleEl) {
-      this.dynamicStyleEl = document.createElement("style");
-      this.dynamicStyleEl.setAttribute("data-obsidian-redesign", "dynamic");
-      document.head.appendChild(this.dynamicStyleEl);
-    }
+    const expected = this.settings.hiddenSidebarIconLabel.trim().toLocaleLowerCase();
+    const exact = this.settings.hiddenSidebarIconMatch === "exact";
 
-    const operator = this.settings.hiddenSidebarIconMatch === "exact" ? "=" : "*=";
-    const label = escapeCssAttributeValue(this.settings.hiddenSidebarIconLabel);
-    this.dynamicStyleEl.textContent = `
-body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${label}" i] {
-  display: none !important;
-}
-`;
+    for (const element of document.querySelectorAll(".sidebar-tabs [aria-label]")) {
+      const actual = (element.getAttribute("aria-label") || "").toLocaleLowerCase();
+      const matches = exact ? actual === expected : actual.includes(expected);
+      if (matches) {
+        element.classList.add("obsidian-redesign-hidden-sidebar-icon");
+      }
+    }
   }
 
   scheduleCustomScrollbarRefresh() {
@@ -1024,9 +1031,8 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
   }
 
   removeDynamicStyle() {
-    if (this.dynamicStyleEl) {
-      this.dynamicStyleEl.remove();
-      this.dynamicStyleEl = null;
+    for (const element of document.querySelectorAll(".obsidian-redesign-hidden-sidebar-icon")) {
+      element.classList.remove("obsidian-redesign-hidden-sidebar-icon");
     }
   }
 };

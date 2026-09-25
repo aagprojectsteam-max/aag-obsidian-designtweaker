@@ -506,6 +506,10 @@ body.obsidian-redesign-status-bar-mode-hidden .status-bar {
   display: none !important;
 }
 
+body.obsidian-redesign-hide-sidebar-icon .obsidian-redesign-hidden-sidebar-tab {
+  display: none !important;
+}
+
 body.obsidian-redesign-center-scrollbar
   .workspace-split.mod-root
   .workspace-leaf-content[data-type="markdown"]

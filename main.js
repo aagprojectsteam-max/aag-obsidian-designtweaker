@@ -373,7 +373,10 @@ module.exports = class ObsidianRedesignPlugin extends Plugin {
       }
     });
 
-    this.registerEvent(this.app.workspace.on("layout-change", () => this.scheduleCustomScrollbarRefresh()));
+    this.registerEvent(this.app.workspace.on("layout-change", () => {
+      this.scheduleCustomScrollbarRefresh();
+      this.updateSidebarIconVisibility(Boolean(this.settings?.masterEnabled));
+    }));
     this.registerEvent(this.app.workspace.on("active-leaf-change", () => this.scheduleCustomScrollbarRefresh()));
     this.registerEvent(this.app.workspace.on("file-open", () => this.scheduleCustomScrollbarRefresh()));
     this.registerDomEvent(window, "resize", () => this.scheduleCustomScrollbarRefresh());
@@ -570,7 +573,7 @@ module.exports = class ObsidianRedesignPlugin extends Plugin {
     this.toggleBodyClass("obsidian-redesign-hide-sidebar-icon", enabled && this.settings.hideSidebarIcon);
 
     this.applyCssVariables();
-    this.updateDynamicStyles(enabled);
+    this.updateSidebarIconVisibility(enabled);
     this.scheduleCustomScrollbarRefresh();
   }
 
@@ -716,25 +719,27 @@ module.exports = class ObsidianRedesignPlugin extends Plugin {
     );
   }
 
-  updateDynamicStyles(enabled) {
+  updateSidebarIconVisibility(enabled) {
+    this.clearHiddenSidebarIcons();
     if (!enabled || !this.settings.hideSidebarIcon || !this.settings.hiddenSidebarIconLabel) {
-      this.removeDynamicStyle();
       return;
     }
 
-    if (!this.dynamicStyleEl) {
-      this.dynamicStyleEl = document.createElement("style");
-      this.dynamicStyleEl.setAttribute("data-obsidian-redesign", "dynamic");
-      document.head.appendChild(this.dynamicStyleEl);
+    const expected = this.settings.hiddenSidebarIconLabel.toLocaleLowerCase();
+    const exact = this.settings.hiddenSidebarIconMatch === "exact";
+    for (const element of document.querySelectorAll(".sidebar-tabs [aria-label]")) {
+      const label = (element.getAttribute("aria-label") || "").toLocaleLowerCase();
+      const matches = exact ? label === expected : label.includes(expected);
+      if (matches) {
+        element.classList.add("obsidian-redesign-hidden-sidebar-tab");
+      }
     }
+  }
 
-    const operator = this.settings.hiddenSidebarIconMatch === "exact" ? "=" : "*=";
-    const label = escapeCssAttributeValue(this.settings.hiddenSidebarIconLabel);
-    this.dynamicStyleEl.textContent = `
-body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${label}" i] {
-  display: none !important;
-}
-`;
+  clearHiddenSidebarIcons() {
+    for (const element of document.querySelectorAll(".obsidian-redesign-hidden-sidebar-tab")) {
+      element.classList.remove("obsidian-redesign-hidden-sidebar-tab");
+    }
   }
 
   scheduleCustomScrollbarRefresh() {
@@ -1020,15 +1025,10 @@ body.obsidian-redesign-hide-sidebar-icon .sidebar-tabs [aria-label${operator}"${
     }
 
     this.removeCustomScrollbars();
-    this.removeDynamicStyle();
+    this.clearHiddenSidebarIcons();
   }
 
-  removeDynamicStyle() {
-    if (this.dynamicStyleEl) {
-      this.dynamicStyleEl.remove();
-      this.dynamicStyleEl = null;
-    }
-  }
+
 };
 
 class RedesignSettingTab extends PluginSettingTab {
@@ -1489,11 +1489,4 @@ function opacity(value) {
 
 function px(value) {
   return `${value}px`;
-}
-
-function escapeCssAttributeValue(value) {
-  return String(value)
-    .replace(/\\/g, "\\\\")
-    .replace(/"/g, '\\"')
-    .replace(/\r?\n/g, " ");
 }

@@ -67,3 +67,12 @@ test('high-frequency controls use debounced persistence and slow fallback pollin
   assert.match(source, /lostpointercapture/);
   assert.match(source, /role", "scrollbar"/);
 });
+
+test('sidebar icon hiding uses a class and static stylesheet, never runtime style injection', () => {
+  const source = fs.readFileSync(path.join(__dirname, '../main.js'), 'utf8');
+  const css = fs.readFileSync(path.join(__dirname, '../styles.css'), 'utf8');
+  assert.doesNotMatch(source, /createElement\(["']style["']\)/);
+  assert.match(source, /updateSidebarIconVisibility/);
+  assert.match(source, /obsidian-redesign-hidden-sidebar-tab/);
+  assert.match(css, /\.obsidian-redesign-hidden-sidebar-tab/);
+});

@@ -134,20 +134,32 @@ body.obsidian-redesign-explorer-borders .nav-folder-title:hover {
   border-color: var(--obsidian-redesign-explorer-hover-border-color);
 }
 
-body.obsidian-redesign-explorer-collapse-icons .nav-folder-collapse-indicator,
-body.obsidian-redesign-explorer-collapse-icons .nav-file-collapse-indicator,
-body.obsidian-redesign-explorer-collapse-icons .collapse-icon {
+body.obsidian-redesign-explorer-collapse-icons
+  .workspace-leaf-content[data-type="file-explorer"]
+  .nav-folder-collapse-indicator,
+body.obsidian-redesign-explorer-collapse-icons
+  .workspace-leaf-content[data-type="file-explorer"]
+  .nav-file-collapse-indicator,
+body.obsidian-redesign-explorer-collapse-icons
+  .workspace-leaf-content[data-type="file-explorer"]
+  .collapse-icon {
   align-items: center !important;
   display: flex !important;
   height: var(--obsidian-redesign-explorer-collapse-icon-button-size) !important;
   justify-content: center !important;
-  margin-right: 4px !important;
+  margin-inline-end: 4px !important;
   width: var(--obsidian-redesign-explorer-collapse-icon-button-size) !important;
 }
 
-body.obsidian-redesign-explorer-collapse-icons .nav-folder-collapse-indicator svg,
-body.obsidian-redesign-explorer-collapse-icons .nav-file-collapse-indicator svg,
-body.obsidian-redesign-explorer-collapse-icons .collapse-icon svg {
+body.obsidian-redesign-explorer-collapse-icons
+  .workspace-leaf-content[data-type="file-explorer"]
+  .nav-folder-collapse-indicator svg,
+body.obsidian-redesign-explorer-collapse-icons
+  .workspace-leaf-content[data-type="file-explorer"]
+  .nav-file-collapse-indicator svg,
+body.obsidian-redesign-explorer-collapse-icons
+  .workspace-leaf-content[data-type="file-explorer"]
+  .collapse-icon svg {
   color: var(--obsidian-redesign-explorer-collapse-icon-color) !important;
   fill: var(--obsidian-redesign-explorer-collapse-icon-color) !important;
   height: var(--obsidian-redesign-explorer-collapse-icon-size) !important;
@@ -484,11 +496,17 @@ body.obsidian-redesign-status-bar-mode-dim .status-bar {
 }
 
 body.obsidian-redesign-status-bar-mode-hover .status-bar:hover,
-body.obsidian-redesign-status-bar-mode-dim .status-bar:hover {
+body.obsidian-redesign-status-bar-mode-hover .status-bar:focus-within,
+body.obsidian-redesign-status-bar-mode-dim .status-bar:hover,
+body.obsidian-redesign-status-bar-mode-dim .status-bar:focus-within {
   opacity: var(--obsidian-redesign-status-bar-hover-opacity);
 }
 
 body.obsidian-redesign-status-bar-mode-hidden .status-bar {
+  display: none !important;
+}
+
+body.obsidian-redesign-hide-sidebar-icon .obsidian-redesign-hidden-sidebar-tab {
   display: none !important;
 }
 
@@ -546,10 +564,15 @@ body.obsidian-redesign-center-scrollbar
   opacity: 0.95;
   pointer-events: auto;
   position: absolute;
-  right: 3px;
+  inset-inline-end: 3px;
   transition: opacity 0.15s ease;
   user-select: none;
   z-index: 20;
+}
+
+.obsidian-redesign-custom-scrollbar:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
 }
 
 .obsidian-redesign-custom-scrollbar-thumb {
@@ -561,6 +584,7 @@ body.obsidian-redesign-center-scrollbar
 }
 
 .obsidian-redesign-custom-scrollbar:hover .obsidian-redesign-custom-scrollbar-thumb,
+.obsidian-redesign-custom-scrollbar:focus-visible .obsidian-redesign-custom-scrollbar-thumb,
 .obsidian-redesign-scrollbar-dragging .obsidian-redesign-custom-scrollbar-thumb {
   background: var(--obsidian-redesign-center-scrollbar-thumb-hover);
 }
